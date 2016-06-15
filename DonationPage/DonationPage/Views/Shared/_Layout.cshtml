@@ -6,8 +6,10 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Montserrat">
 </head>
 <body>
+
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -16,13 +18,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Ladybug House Donation Admin", "Index", "DonationEntries", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("LadyBugHouseAdmin", "Index", "DonationEntries", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav" style="float: left">
                     <li>@Html.ActionLink("Approved stories", "Stories", "DonationEntries")</li>
                     <li>@Html.ActionLink("All stories", "FullList", "DonationEntries")</li>
+                    <li><a href="http://www.ladybughouse.org/" target="_blank" />LadyBugHouseOrg</li>
                 </ul>
+                <img src="~/Content/Images/titleWithLogo.png" style="float: right; width :20%; padding-top: 5px" />
+                <ul style="clear: both"></ul>
             </div>
         </div>
     </div>
