@@ -1,12 +1,15 @@
-﻿body {
+﻿
+body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background: url('../../../../Content/Images/fullPic.svg') no-repeat 50% -50%;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    margin-top: 50px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -21,4 +24,42 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+.navbar-inverse {
+    background-color: #412251;
+    border-color: none;
+}
+
+.navbar {
+    min-height: 100px;
+}
+
+body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 , p, div{
+    font-family: Montserrat, "Proxima Nova",Arial,sans-serif;
+}
+
+
+input[type=button],
+input[type=submit] {
+    background-color: #00ae91;
+    border: 1px solid #f4f4f4;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #333;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 400;
+    height: 30px;
+    margin: 0;
+    outline: 0;
+    padding: 4px 20px 6px;
+    text-align: center;
+}
+
+input[type=button]:hover,
+input[type=submit]:hover {
+    background-color: #eaeaea;
+    border-color: #eaeaea;
+    color: #000;
 }
