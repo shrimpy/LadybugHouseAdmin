@@ -1,0 +1,41 @@
+﻿@model DonationPage.Models.DonationEntry
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Donation story details</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Approved)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Approved)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DonationTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DonationTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Text)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Text)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.DonationID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

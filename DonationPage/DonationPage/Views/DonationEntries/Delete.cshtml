@@ -1,0 +1,47 @@
+﻿@model DonationPage.Models.DonationEntry
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete donation story</h2>
+
+<h3>Are you sure you want to delete?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Approved)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Approved)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DonationTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DonationTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Text)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Text)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
