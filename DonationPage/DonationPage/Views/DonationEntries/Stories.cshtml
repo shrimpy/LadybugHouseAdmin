@@ -1,34 +1,48 @@
-﻿@model IEnumerable<DonationPage.Models.DonationEntry>
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Montserrat">
+</head>
+<body>
 
-@{
-    ViewBag.Title = "Approved stories";
-    Layout = null;
-}
+    @model IEnumerable<DonationPage.Models.DonationEntry>
 
-<h2>Approved stories</h2>
-
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Honoree)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Comments)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Honoree)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comments)
-            </td>
-        </tr>
+    @{
+        ViewBag.Title = "Approved stories";
+        Layout = null;
     }
 
-</table>
 
+    <h2>Approved stories</h2>
 
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Honoree)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comments)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Honoree)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comments)
+                </td>
+            </tr>
+        }
+
+    </table>
+
+</body>
+</html>
