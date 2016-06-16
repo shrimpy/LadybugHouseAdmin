@@ -1,0 +1,137 @@
+﻿<style>
+    .row {
+        margin-bottom: 10px;
+    }
+</style>
+
+<script>
+    function GetWebhook() {
+        var completePromise = $.Deferred();
+        ShowInfo("Checking monitoring service ...", completePromise);
+        $.post(
+            "/DonationEntries/GetWehbook",
+            function (data) {
+                console.log(JSON.stringify(data));
+                ShowInfo("All Good!");
+            }).fail(function (error) {
+                console.log(JSON.stringify(error));
+                ShowError("Failed to check on monitoring service.");
+            }).always(function () {
+                completePromise.resolve();
+            });
+    }
+
+    function RemoveWebhook() {
+        var completePromise = $.Deferred();
+        ShowInfo("Stopping service to monitor your email account ...", completePromise);
+        $.post(
+            "/DonationEntries/RemoveWehbook",
+            function (data) {
+                console.log(JSON.stringify(data));
+                ShowInfo("Monitoring service is now cancelled.");
+            }).fail(function (error) {
+                console.log(JSON.stringify(error));
+                ShowError("Failed to stop monitoring your email. Please double check your security settings.");
+            }).always(function () {
+                completePromise.resolve();
+            });
+    }
+
+    function RegisterWebhook() {
+        var completePromise = $.Deferred();
+        ShowInfo("Setting up service to monitor your email account ...", completePromise);
+        $.post(
+            "/DonationEntries/SetupWehbook",
+            function (data) {
+                console.log(JSON.stringify(data));
+                ShowInfo("Service is now monitoring your email inbox.");
+            }).fail(function (error) {
+                console.log(JSON.stringify(error));
+                ShowError("Failed to setup webhook with your account. Please double check your security settings.");
+            }).always(function () {
+                completePromise.resolve();
+            });
+    }
+
+    function ShowInfo(message, completePromise) {
+        var element = $('<div class="alert alert-success text-center" style="display:none;">' + message + '</div>');
+        ShowElement(element, completePromise);
+    }
+
+    function ShowError(message, completePromise) {
+        var element = $('<div class="alert alert-danger text-center" style="display:none;">' + message + '</div>');
+        ShowElement(element, completePromise);
+    }
+
+    function ShowElement(element, completePromise) {
+        $("#msg-container").append(element);
+        element.show("fast");
+
+        if (completePromise) {
+            completePromise.always(function () {
+                element.hide("slow", function () {
+                    element.remove();
+                });
+            });
+        } else {
+            setTimeout(function () {
+                element.hide("slow", function () {
+                    element.remove();
+                });
+            }, 10000);
+        }
+    }
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="msg-container" class="col-xs-12">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-4 text-center">Sign-In <br />(This is prerequisite to all other action)</div>
+        <div class="col-xs-8">
+            <a href="https://ladybughousemailmonitor.azurewebsites.net/api/Mail/SignIn"
+               target="_blank"
+               class="btn btn-primary btn-block"
+               role="button">Click to sign-in with Outlook.com/Office365 email.</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-4 text-center">Monitor email Inbox</div>
+        <div class="col-xs-8">
+            <button type="button"
+                    class="btn btn-primary btn-block"
+                    onclick="RegisterWebhook()">
+                Click to start monitoring email account Inbox.
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-4 text-center">Cancel monitoring</div>
+        <div class="col-xs-8">
+            <button type="button"
+                    class="btn btn-primary btn-block"
+                    onclick="RemoveWebhook()">
+                Click to stop monitoring email account Inbox.
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-4 text-center">Health check!</div>
+        <div class="col-xs-8">
+            <button type="button"
+                    class="btn btn-primary btn-block"
+                    onclick="GetWebhook()">
+                Click to check on monitoring service.
+            </button>
+        </div>
+    </div>
+</div>

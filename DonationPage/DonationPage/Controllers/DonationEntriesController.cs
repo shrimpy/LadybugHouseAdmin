@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
+using System.Configuration;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using DonationPage.Models;
 
@@ -28,13 +29,15 @@ namespace DonationPage.Controllers
         // GET: DonationEntries/Details/5
         public ActionResult Details(string id)
         {
-            if (id == null) {
+            if (id == null)
+            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
             DonationEntry donationEntry = tableManager.GetEntity(PartitionKey, id);
 
-            if (donationEntry == null) {
+            if (donationEntry == null)
+            {
                 return HttpNotFound();
             }
             return View(donationEntry);
@@ -53,7 +56,8 @@ namespace DonationPage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "DonationID,Honoree,Comments")] DonationEntry donationEntry)
         {
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 donationEntry.PartitionKey = PartitionKey;
                 donationEntry.RowKey = donationEntry.DonationID;
                 donationEntry.Approved = true;
@@ -83,11 +87,13 @@ namespace DonationPage.Controllers
         // GET: DonationEntries/Edit/5
         public ActionResult Edit(string id)
         {
-            if (id == null) {
+            if (id == null)
+            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             DonationEntry donationEntry = tableManager.GetEntity(PartitionKey, id);
-            if (donationEntry == null) {
+            if (donationEntry == null)
+            {
                 return HttpNotFound();
             }
             return View(donationEntry);
@@ -100,7 +106,8 @@ namespace DonationPage.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(DonationEntry donationEntry)
         {
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 tableManager.UpsertEntity(donationEntry);
                 return RedirectToAction("Index");
             }
@@ -110,15 +117,17 @@ namespace DonationPage.Controllers
         // GET: DonationEntries/Delete/5
         public ActionResult Delete(string id)
         {
-            if (id == null) {
+            if (id == null)
+            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             DonationEntry donationEntry = tableManager.GetEntity(PartitionKey, id);
-            if (donationEntry == null) {
+            if (donationEntry == null)
+            {
                 return HttpNotFound();
             }
             return View(donationEntry);
-       }
+        }
 
         // POST: DonationEntries/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -129,6 +138,63 @@ namespace DonationPage.Controllers
             tableManager.DeleteEntity(donationEntry);
 
             return RedirectToAction("Index");
+        }
+
+        public ActionResult Settings()
+        {
+            ViewBag.Title = "Settings";
+            return View("Settings");
+        }
+
+        [HttpPost, ActionName("SetupWehbook")]
+        public async Task<ActionResult> SetupWehbook()
+        {
+            using (var client = new HttpClient())
+            using (var response = await client.GetAsync(ConfigurationManager.AppSettings["RegisterWebhookEndpoint"]))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { data = await response.Content.ReadAsStringAsync() });
+                }
+                else
+                {
+                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "{0} {1}", response.StatusCode, await response.Content.ReadAsStringAsync()));
+                }
+            }
+        }
+
+        [HttpPost, ActionName("RemoveWehbook")]
+        public async Task<ActionResult> RemoveWehbook()
+        {
+            using (var client = new HttpClient())
+            using (var response = await client.GetAsync(ConfigurationManager.AppSettings["RemoveWebhookEndpoint"]))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { data = await response.Content.ReadAsStringAsync() });
+                }
+                else
+                {
+                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "{0} {1}", response.StatusCode, await response.Content.ReadAsStringAsync()));
+                }
+            }
+        }
+
+        [HttpPost, ActionName("GetWehbook")]
+        public async Task<ActionResult> GetWehbook()
+        {
+            using (var client = new HttpClient())
+            using (var response = await client.GetAsync(ConfigurationManager.AppSettings["GetWebhookEndpoint"]))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { data = await response.Content.ReadAsStringAsync() });
+                }
+                else
+                {
+                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "{0} {1}", response.StatusCode, await response.Content.ReadAsStringAsync()));
+                }
+            }
         }
     }
 }
