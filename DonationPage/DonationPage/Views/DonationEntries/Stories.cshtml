@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Approved stories";
+    Layout = null;
 }
 
 <h2>Approved stories</h2>
@@ -9,10 +10,10 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.DonationTitle)
+            @Html.DisplayNameFor(model => model.Honoree)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Text)
+            @Html.DisplayNameFor(model => model.Comments)
         </th>
         <th></th>
     </tr>
@@ -20,15 +21,10 @@
     @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.DonationTitle)
+                @Html.DisplayFor(modelItem => item.Honoree)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Text)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.DonationID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.DonationID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.DonationID })
+                @Html.DisplayFor(modelItem => item.Comments)
             </td>
         </tr>
     }

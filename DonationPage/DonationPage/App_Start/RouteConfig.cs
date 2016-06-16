@@ -20,8 +20,6 @@ namespace DonationPage
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "DonationEntries", action = "Index", id = UrlParameter.Optional }
             );
-
-            Database.SetInitializer(new DonationDbInitializer());
         }
     }
 }

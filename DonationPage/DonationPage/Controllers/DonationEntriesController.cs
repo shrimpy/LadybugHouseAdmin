@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using DonationPage.Models;
@@ -12,25 +13,29 @@ namespace DonationPage.Controllers
 {
     public class DonationEntriesController : Controller
     {
-        private DonationPageContext db = new DonationPageContext();
+        // private DonationPageContext db = new DonationPageContext();
+        private TableManager<DonationEntry> tableManager = new TableManager<DonationEntry>("donationconfirmation");
+        private const string PartitionKey = "donation-confirmation";
 
         // GET: DonationEntries
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             ViewBag.Title = "Donation stories to approve";
-            return View(db.DonationEntries.Where(d => !d.Approved).ToList());
+
+            var allItems = await tableManager.GetAllEntitiesAsync();
+            return View(allItems.Where(x => !x.Approved).ToList());
         }
 
         // GET: DonationEntries/Details/5
         public ActionResult Details(string id)
         {
-            if (id == null)
-            {
+            if (id == null) {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DonationEntry donationEntry = db.DonationEntries.Find(id);
-            if (donationEntry == null)
-            {
+
+            DonationEntry donationEntry = tableManager.GetEntity(PartitionKey, id);
+
+            if (donationEntry == null) {
                 return HttpNotFound();
             }
             return View(donationEntry);
@@ -47,40 +52,43 @@ namespace DonationPage.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "DonationID,DonationTitle,Text")] DonationEntry donationEntry)
+        public async Task<ActionResult> Create([Bind(Include = "DonationID,Honoree,Comments")] DonationEntry donationEntry)
         {
-            if (ModelState.IsValid)
-            {
-                db.DonationEntries.Add(donationEntry);
+            if (ModelState.IsValid) {
+                donationEntry.PartitionKey = PartitionKey;
+                donationEntry.RowKey = donationEntry.DonationID;
                 donationEntry.Approved = true;
-                db.SaveChanges();
+
+                await tableManager.CreateEntityAsync(donationEntry);
+
                 return RedirectToAction("Index");
             }
 
             return View(donationEntry);
         }
 
-        public ActionResult Stories()
+        public async Task<ActionResult> Stories()
         {
-            return View(db.DonationEntries.Where(d => d.Approved).ToList());
+            var allItems = await tableManager.GetAllEntitiesAsync();
+            return View(allItems.Where(x => x.Approved).ToList());
         }
 
-        public ActionResult FullList()
+        public async Task<ActionResult> FullList()
         {
             ViewBag.Title = "All stories";
-            return View("Index", db.DonationEntries.ToList());
+
+            var allItems = await tableManager.GetAllEntitiesAsync();
+            return View("Index", allItems);
         }
 
         // GET: DonationEntries/Edit/5
         public ActionResult Edit(string id)
         {
-            if (id == null)
-            {
+            if (id == null) {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DonationEntry donationEntry = db.DonationEntries.Find(id);
-            if (donationEntry == null)
-            {
+            DonationEntry donationEntry = tableManager.GetEntity(PartitionKey, id);
+            if (donationEntry == null) {
                 return HttpNotFound();
             }
             return View(donationEntry);
@@ -91,12 +99,10 @@ namespace DonationPage.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "DonationID,DonationTitle,Text,Approved")] DonationEntry donationEntry)
+        public ActionResult Edit(DonationEntry donationEntry)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(donationEntry).State = EntityState.Modified;
-                db.SaveChanges();
+            if (ModelState.IsValid) {
+                tableManager.UpsertEntity(donationEntry);
                 return RedirectToAction("Index");
             }
             return View(donationEntry);
@@ -105,36 +111,25 @@ namespace DonationPage.Controllers
         // GET: DonationEntries/Delete/5
         public ActionResult Delete(string id)
         {
-            if (id == null)
-            {
+            if (id == null) {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DonationEntry donationEntry = db.DonationEntries.Find(id);
-            if (donationEntry == null)
-            {
+            DonationEntry donationEntry = tableManager.GetEntity(PartitionKey, id);
+            if (donationEntry == null) {
                 return HttpNotFound();
             }
             return View(donationEntry);
-        }
+       }
 
         // POST: DonationEntries/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            DonationEntry donationEntry = db.DonationEntries.Find(id);
-            db.DonationEntries.Remove(donationEntry);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+            DonationEntry donationEntry = tableManager.GetEntity(PartitionKey, id);
+            tableManager.DeleteEntity(donationEntry);
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            return RedirectToAction("Index");
         }
     }
 }

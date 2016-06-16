@@ -19,19 +19,35 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.DonationTitle)
+            @Html.DisplayNameFor(model => model.Amount)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.DonationTitle)
+            @Html.DisplayFor(model => model.Amount)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Text)
+            @Html.DisplayNameFor(model => model.AcknowledgementType)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Text)
+            @Html.EnumDropDownListFor(model => model.AcknowledgementType, new { @disabled = "disabled" })
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Honoree)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Honoree)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Comments)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Comments)
         </dd>
 
     </dl>

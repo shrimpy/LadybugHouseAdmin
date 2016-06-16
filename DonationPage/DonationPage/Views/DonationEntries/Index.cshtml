@@ -16,10 +16,16 @@
                 @Html.DisplayNameFor(model => model.Approved)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DonationTitle)
+                @Html.DisplayNameFor(model => model.Amount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Text)
+                @Html.DisplayNameFor(model => model.AcknowledgementType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Honoree)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comments)
             </th>
             <th></th>
         </tr>
@@ -30,10 +36,16 @@
                 @Html.CheckBoxFor(modelItem => item.Approved)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DonationTitle)
+                @Html.DisplayFor(modelItem => item.Amount)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Text)
+                @Html.DisplayFor(modelItem => item.AcknowledgementType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Honoree)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comments)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.DonationID }) |
