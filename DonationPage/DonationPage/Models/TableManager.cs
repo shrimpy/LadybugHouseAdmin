@@ -20,7 +20,7 @@ namespace DonationPage.Models
         {
             this.tableName = tableName;
 
-            storageAccount = CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["TableStorageAccount"].ConnectionString);
+            storageAccount = CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["StorageConnectionString"].ConnectionString);
             tableClient = storageAccount.CreateCloudTableClient();
 
             cloudTable = tableClient.GetTableReference(this.tableName);
